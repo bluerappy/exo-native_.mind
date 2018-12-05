@@ -2,7 +2,7 @@
 import { createStackNavigator } from 'react-navigation';
 import UsersDetails from '../screens/usersDetails';
 import Home from '../../containers/HomeContainer';
-import UserList from '../screens/UsersList';
+import UserList from '../../containers/UsersListContainer';
 
 
 const RootNavigator = createStackNavigator({

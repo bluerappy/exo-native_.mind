@@ -22,16 +22,40 @@ const styles = StyleSheet.create ({
     backgroundColor: 'white',
     margin : 5,
     height: 300,
+  },
+  addButton : {
+    backgroundColor: "rgba(0, 0, 255, 1)",
+    width: 300,
+    height: 45,
+    borderColor: "transparent",
+    borderWidth: 0,
+    borderRadius: 5,
+  },
+  text: {
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  contactText: { 
+    flex: 1,
+    fontWeight: 'bold',
+    justifyContent: 'center' 
+  },
+  upPart: {
+    flex: 1, 
+    flexDirection: 'row'
+  },
+  companyPart: { 
+    margin : 5
   }
 })
 
 class UsersDetails extends React.Component {
   render() {
     const { navigation } = this.props;
-    const userData = navigation.getParam('user', 'NO-ID');
+    const userData = navigation.getParam('item', 'NO-ID');
     return (
       <ScrollView>
-        <View style={{ flex: 1, flexDirection: 'row'}}>
+        <View style={styles.upPart}>
           <View style={styles.picture}>
             <Avatar
               xlarge
@@ -40,32 +64,25 @@ class UsersDetails extends React.Component {
               activeOpacity={0.7}
               />
           </View>
-          <View style={{ flex: 1, fontWeight: 'bold', justifyContent: 'center' }}>
+          <View style={styles.contactText}>
             <Text>{userData.username}</Text>
             <Text>{userData.phone}</Text>
             <Text>{userData.email}</Text>
           </View>
         </View>
-        <View style={{ margin : 5 }}>
+        <View style={styles.companyPart}>
           <Text>Company : {userData.company}</Text>
           <Text>Actual Job : {userData.job}</Text>
         </View>
-        <ScrollView style={styles.bio}>
-          <Text style={{alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.bio}>
+          <Text style={styles.text}>
             {userData.bio}
           </Text>
-        </ScrollView>
-        <View style={{alignItems: 'center', justifyContent: 'center' }}>
+        </View>
+        <View style={styles.text}>
           <Button
               title=" + Add to Contact List"
-              buttonStyle={{
-              backgroundColor: "rgba(0, 0, 255, 1)",
-              width: 300,
-              height: 45,
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 5,
-            }}
+              buttonStyle={ styles.addButton }
           />
         </View>
       </ScrollView>

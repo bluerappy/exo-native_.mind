@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableHighlight } from 'react-native';
+import { SearchBar, List, ListItem } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,38 +25,51 @@ class UserList extends React.Component {
     super();
     this.state = {
         data : [],
-        dataBackup : [],
-        search : ""
+        search : "",
+        refreshing: false,
     }
-}
+};
 
 componentDidMount () {
   const { navigation } = this.props;
   const usersList = navigation.getParam('usersList');
   this.setState({data : usersList})
+};
+
+loadMoreUsers = () => {
+  console.log('Scroll')
+  this.props.fetchUsers();
 }
 
 setSearchText(username){
   this.setState({ search : username })
-  
-   }
+};
 
-  usersMap = () => {
-    const filterData = this.state.data.filter(search => 
-      search.username.match(this.state.search)
-    );
-    const {navigate} = this.props.navigation;
-    return filterData.map((user, id) => {
-      return (
-          <View style={styles.container} key={id} >      
-            <Image source={{ uri: user.avatar}} style={styles.photo} />
-            <Text style={styles.text} onPress={() => navigate('Details', {user})}>
-              {user.username}
-            </Text>
-          </View>  
-      );
-    });
-  }
+_renderFlatList = () => {
+  const {navigate} = this.props.navigation;
+  const filterData = this.state.data.filter(search => 
+        search.username.match(this.state.search)
+  );
+
+  return (
+      <FlatList
+        onEndReached={this.loadMoreUsers}
+        onEndReachedThreshold={0.01}
+        data={filterData}
+        keyExtractor={item => item.uuid}
+        renderItem={({ item }) => (
+          <TouchableHighlight onPress={() => navigate('Details', {item})}>
+            <ListItem
+              roundAvatar
+              title={item.username}
+              subtitle={item.email}
+              avatar={{ uri: item.avatar }}
+            />
+          </TouchableHighlight>
+          )}
+      />
+    )
+};
 
   render() {
     return (
@@ -65,10 +78,10 @@ setSearchText(username){
           lightTheme
           onChangeText={(username) => this.setSearchText(username)}
         />
-        {this.usersMap()}
-      </ScrollView>
-    );
-  }  
+        {this._renderFlatList()}
+    </ScrollView>
+    )
+  }
 }
 
 export default UserList;
